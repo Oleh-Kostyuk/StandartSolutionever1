@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Carrier">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/Carrier"
+            android:layout_width="match_parent"
+            android:layout_height="229dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="10"
+            android:choiceMode="singleChoice" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/btncarsave"
+            android:layout_width="354dp"
+            android:layout_height="117dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="СОХРАНИТЬ" />
+
+        <Button
+            android:id="@+id/btncardtrans"
+            android:layout_width="354dp"
+            android:layout_height="115dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="ПЕРЕЙТИ" />
+
+
+    </LinearLayout>
+</LinearLayout>

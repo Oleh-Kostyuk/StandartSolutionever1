@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Quantityfrag">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="157dp"
+            android:layout_height="54dp"
+            android:layout_centerInParent = "true"
+            android:layout_above="@+id/quantity"
+            android:layout_marginBottom="22dp"
+            android:textAllCaps="true"
+            android:text="Количество сырья" />
+
+        <EditText
+            android:id="@+id/quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent = "true"
+            android:inputType ="numberDecimal"
+            android:hint="Количество сырья" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="292dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnqtsave"
+            android:layout_width="168dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="СОХРАНИТЬ" />
+
+        <Button
+            android:id="@+id/btnqttrans"
+            android:layout_width="168dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="ПЕРЕЙТИ" />
+
+
+    </LinearLayout>
+</LinearLayout>

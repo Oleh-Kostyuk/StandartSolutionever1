@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Mainfragment">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Поставщик"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/provmain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Перевозчик"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/carmain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+        </TableRow>
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Тип сырья"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/typemain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Вид сырья"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/kindmain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Количество"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/qtmain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textSize="25dp" />
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnsave"
+            android:layout_width="168dp"
+            android:layout_height="151dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:text="СОХРАНИТЬ"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/btncansel"
+            android:layout_width="168dp"
+            android:layout_height="152dp"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:text="ОТКАТИТЬСЯ"
+            android:textSize="25dp" />
+
+
+    </LinearLayout>
+</LinearLayout>
