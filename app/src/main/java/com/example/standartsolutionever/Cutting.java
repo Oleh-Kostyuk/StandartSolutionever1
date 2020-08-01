@@ -4,7 +4,7 @@ package com.example.standartsolutionever;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.text.TextUtils.isEmpty;
@@ -21,6 +22,7 @@ import static android.text.TextUtils.isEmpty;
  * A simple {@link Fragment} subclass.
  */
 public class Cutting extends Fragment {
+    TextView infTextView;
     Boolean index;
     ListView lvData;
     Button btncarsave;
@@ -49,7 +51,19 @@ public class Cutting extends Fragment {
 
         index = false;
         View rootview = inflater.inflate(R.layout.fragment_cutting, container, false);
-        final String[] Carriers = {"Была порезка", "Нет порезки"};
+        String [] isCutting =null;
+        if(MainActivity.slcMaterialsForRefinary.equals("Щепа"))
+            isCutting = new String[]{"Нет порезки"};
+        else isCutting = new String[]{"Была порезка", "Нет порезки"};
+        final String[] Carriers = isCutting;
+        infTextView =rootview.findViewById(R.id.infTextView);
+        infTextView.setTextSize(20);
+        infTextView.setText(Html.fromHtml("<b><font color=\"red\">фрагмент: " +
+                " </font> порезка </b>"
+                + "<i> 1 2 </i>"
+                + "<font color=\"red\"><b>3 </b></font>"
+                + "<i>4 5</i>"
+        ));
         lvData = rootview.findViewById(R.id.Carrier);
         ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(),
                 android.R.layout.simple_list_item_single_choice, Carriers);

@@ -5,11 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Mainfragment">
+    <TextView
+        android:id="@+id/infTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
+
 
         <TableRow>
 

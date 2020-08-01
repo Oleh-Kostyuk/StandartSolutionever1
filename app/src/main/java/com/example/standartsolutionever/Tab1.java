@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,43 +19,33 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.InvalidParameterException;
 
 import static android.text.TextUtils.isEmpty;
-import static com.example.standartsolutionever.RwmContract.CONTENT_AUTHORITY_URI;
-import static com.example.standartsolutionever.RwmContract.CONTENT_AUTHORITY_URI;
+import static com.example.standartsolutionever.RwmUtilityContract.CONTENT_AUTHORITY_URI;
 
 
 public class Tab1 extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+    TextView infTextView;
     ListView lvData;
-    Button btnproviders ;
+
+    Button btnsave;
+    Button btnturn;
     boolean index;
-    Button btnproviders2;
-    String slcProviders;
+
     SimpleCursorAdapter scAdapter;
-
     private static final int LOADER_ID = 225;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private   OnDataTransfer1 mListener;
 
 
-    // TODO: Rename and change types and number of parameters
+    private   ChoseProvider mListener;
+    String slcProvider;
+
     public static Tab1 newInstance() {
         Tab1 fragment = new Tab1();
-      /*  Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args); */
         return fragment;
     }
     @Override
@@ -72,29 +62,30 @@ public class Tab1 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
                              Bundle savedInstanceState) {
         index = false;
         View rootview = inflater.inflate(R.layout.fragment_tab1, container, false);
+        infTextView =rootview.findViewById(R.id.choiceOfSupplier);
+        infTextView.setTextSize(20);
+        infTextView.setText(Html.fromHtml("<b><font color=\"red\"> фрагмент:  </font>выбор поставщика </b>"
+                + "<font color=\"red\"><b>1 </b></font>"
+                + "<i>2 3 4 5 6 </i>"));
+
         lvData = rootview.findViewById(R.id.providers);
-        btnproviders =rootview.findViewById(R.id.btnproviders);
-        String[] from = new String[] {RwmContract.ProvidersOfRwmEntry.COLUMN_NAME };
+        btnsave =rootview.findViewById(R.id.btnproviders);
+
+        String[] from = new String[] {RwmUtilityContract.ProvidersOfRwmEntry.COLUMN_NAME };
         int[] to = new int[] { android.R.id.text1 };
 
         scAdapter = new SimpleCursorAdapter(getActivity(),
                 android.R.layout.simple_list_item_single_choice, null, from,to );
+        scAdapter.notifyDataSetChanged();
         lvData.setAdapter(scAdapter);
         getLoaderManager().initLoader(LOADER_ID, null, this);
-        btnproviders2 =rootview.findViewById(R.id.btnproviders2);
+        btnturn =rootview.findViewById(R.id.btnproviders2);
 
-        btnproviders = rootview.findViewById(R.id.btnproviders);
-        btnproviders.setEnabled(index);
-        btnproviders.setOnClickListener(new View.OnClickListener() {
+        btnsave = rootview.findViewById(R.id.btnproviders);
+        btnsave.setEnabled(index);
+        btnsave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-               /* FragmentTransaction transaction = getFragmentManager()
-                        .beginTransaction();
-
-                transaction.replace(R.id.root_frame1, new Carrier());
-                transaction.addToBackStack(null);
-                transaction.commit(); */
                 ((MainActivity) getActivity()).openNewContentFragment ( Carrier.newInstance());
             }
         });
@@ -102,14 +93,13 @@ public class Tab1 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
         return rootview;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnDataTransfer1) {
-            mListener = (OnDataTransfer1) context;
+        if (context instanceof ChoseProvider) {
+            mListener = (ChoseProvider) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -127,16 +117,16 @@ public class Tab1 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle bundle) {
         String[] projection = {
-                RwmContract.ProvidersOfRwmEntry._ID,
-                RwmContract.ProvidersOfRwmEntry.COLUMN_NAME,
+                RwmUtilityContract.ProvidersOfRwmEntry._ID,
+                RwmUtilityContract.ProvidersOfRwmEntry.COLUMN_NAME,
         };
         if(id == LOADER_ID)
             return new CursorLoader(getActivity(), Uri.withAppendedPath(CONTENT_AUTHORITY_URI,
-                    RwmContract.ProvidersOfRwmEntry.TABLE_NAME),
+                    RwmUtilityContract.ProvidersOfRwmEntry.TABLE_NAME),
                     projection,
                     null,
                     null,
-                    RwmContract.ProvidersOfRwmEntry._ID);
+                    RwmUtilityContract.ProvidersOfRwmEntry._ID);
         else
             throw new InvalidParameterException("Invalid loader id");
     }
@@ -149,14 +139,14 @@ public class Tab1 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cursor.moveToPosition(position);
-                 slcProviders = cursor.getString(1);
+                 slcProvider = cursor.getString(1);
             }
         });
-        btnproviders2.setOnClickListener(new View.OnClickListener() {
+        btnturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            mListener.onDataTransfer1(slcProviders);
-            if (!isEmpty(slcProviders)) btnproviders.setEnabled(!index);
+            mListener.ChoseProvider(slcProvider);
+            if (!isEmpty(slcProvider)) btnsave.setEnabled(!index);
             else Toast.makeText(getActivity(), "Выберите поставщика",Toast.LENGTH_LONG).show();
 
 
@@ -169,10 +159,9 @@ public class Tab1 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
-    interface OnDataTransfer1 {
-         void  onDataTransfer1 ( String string);
+    interface ChoseProvider {
+         void  ChoseProvider ( String string);
     }
-
 
     }
 

@@ -1,20 +1,32 @@
 package com.example.standartsolutionever;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import static com.example.standartsolutionever.RwmContract.CONTENT_AUTHORITY_URI;
+
+import org.jumpmind.symmetric.android.SQLiteOpenHelperRegistry;
+import org.jumpmind.symmetric.android.SymmetricService;
+import org.jumpmind.symmetric.common.ParameterConstants;
+
+import java.util.Properties;
+
+import static com.example.standartsolutionever.RwmUtilityContract.DATABASE_NAME;
 
 
-public class RwmProvider extends ContentProvider {
+public class RwmContentProvider extends ContentProvider {
+
     com.example.standartsolutionever.DBHelper mDBhelper;
+    private final String REGISTRATION_URL = "http://192.168.1.103:31415/sync/server-000";
+    private final String NODE_ID = "android-001";
+    private final String NODE_GROUP = "store";
+
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     public static final int PROVIDERS = 100;
     public static final int KINDOFRAWMATERIALS = 200;
@@ -28,14 +40,14 @@ public class RwmProvider extends ContentProvider {
     private static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        matcher.addURI(RwmContract.CONTENT_AUTHORITY,RwmContract.ProvidersOfRwmEntry.TABLE_NAME,PROVIDERS);
-        matcher.addURI(RwmContract.CONTENT_AUTHORITY,RwmContract.KindOfRwmEntry.TABLE_NAME,KINDOFRAWMATERIALS);
-        matcher.addURI(RwmContract.CONTENT_AUTHORITY,RwmContract.KindOfRwmEntry.TABLE_NAME +"/#",KINDOFRAWMATERIALS_ID);
-        matcher.addURI(RwmContract.CONTENT_AUTHORITY,RwmContract.TypeOfRwmEntry.TABLE_NAME,TYPEOFRAWMATERIALS);
-        matcher.addURI(RwmContract.CONTENT_AUTHORITY,RwmContract.OrdersEntry.TABLE_NAME,ORDERS);
-        matcher.addURI(RwmContract.CONTENT_AUTHORITY,RwmContract.OrdersEntry.TABLE_NAME + "/#",ORDERS_ID);
-        matcher.addURI(RwmContract.CONTENT_AUTHORITY,RwmContract.RefinaryEntry.TABLE_NAME,REFINARY);
-        matcher.addURI(RwmContract.CONTENT_AUTHORITY,RwmContract.RefinaryEntry.TABLE_NAME + "/#",REFINARY_ID);
+        matcher.addURI(RwmUtilityContract.CONTENT_AUTHORITY, RwmUtilityContract.ProvidersOfRwmEntry.TABLE_NAME,PROVIDERS);
+        matcher.addURI(RwmUtilityContract.CONTENT_AUTHORITY, RwmUtilityContract.KindOfRwmEntry.TABLE_NAME,KINDOFRAWMATERIALS);
+        matcher.addURI(RwmUtilityContract.CONTENT_AUTHORITY, RwmUtilityContract.KindOfRwmEntry.TABLE_NAME +"/#",KINDOFRAWMATERIALS_ID);
+        matcher.addURI(RwmUtilityContract.CONTENT_AUTHORITY, RwmUtilityContract.TypeOfRwmEntry.TABLE_NAME,TYPEOFRAWMATERIALS);
+        matcher.addURI(RwmUtilityContract.CONTENT_AUTHORITY, RwmUtilityContract.OrdersEntry.TABLE_NAME,ORDERS);
+        matcher.addURI(RwmUtilityContract.CONTENT_AUTHORITY, RwmUtilityContract.OrdersEntry.TABLE_NAME + "/#",ORDERS_ID);
+        matcher.addURI(RwmUtilityContract.CONTENT_AUTHORITY, RwmUtilityContract.RefinaryEntry.TABLE_NAME,REFINARY);
+        matcher.addURI(RwmUtilityContract.CONTENT_AUTHORITY, RwmUtilityContract.RefinaryEntry.TABLE_NAME + "/#",REFINARY_ID);
 
         return matcher;
     }
@@ -43,7 +55,32 @@ public class RwmProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mDBhelper = DBHelper.getInstance(getContext());
-        return false;
+
+        SQLiteOpenHelperRegistry.register(DATABASE_NAME, mDBhelper);
+
+        Intent intent = new Intent(getContext(), SymmetricService.class);
+
+        intent.putExtra(SymmetricService.INTENTKEY_SQLITEOPENHELPER_REGISTRY_KEY, DATABASE_NAME);
+        intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, REGISTRATION_URL);
+        intent.putExtra(SymmetricService.INTENTKEY_EXTERNAL_ID, NODE_ID);
+        intent.putExtra(SymmetricService.INTENTKEY_NODE_GROUP_ID, NODE_GROUP);
+        intent.putExtra(SymmetricService.INTENTKEY_START_IN_BACKGROUND, true);
+
+
+        Properties properties = new Properties();
+        properties.put(ParameterConstants.FILE_SYNC_ENABLE, "true");
+        properties.put("start.file.sync.tracker.job", "true");
+        properties.put("start.file.sync.push.job", "true");
+        properties.put("start.file.sync.pull.job", "true");
+        properties.put("job.file.sync.pull.period.time.ms", "10000");
+
+        intent.putExtra(SymmetricService.INTENTKEY_PROPERTIES, properties);
+
+        getContext().startService(intent);
+
+        // Assumes that any failures will be reported by a thrown exception.
+        return true;
+
     }
 
     @Nullable
@@ -54,42 +91,45 @@ public class RwmProvider extends ContentProvider {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
         switch(match) {
             case PROVIDERS:
-                queryBuilder.setTables(RwmContract.ProvidersOfRwmEntry.TABLE_NAME);
+                queryBuilder.setTables(RwmUtilityContract.ProvidersOfRwmEntry.TABLE_NAME);
                 break;
             case KINDOFRAWMATERIALS:
-                queryBuilder.setTables(RwmContract.KindOfRwmEntry.TABLE_NAME);
+                queryBuilder.setTables(RwmUtilityContract.KindOfRwmEntry.TABLE_NAME);
                 break;
             case KINDOFRAWMATERIALS_ID:
-                queryBuilder.setTables(RwmContract.KindOfRwmEntry.TABLE_NAME);
+                queryBuilder.setTables(RwmUtilityContract.KindOfRwmEntry.TABLE_NAME);
                 long id3 = ContentUris.parseId(uri);
-                queryBuilder.appendWhere(RwmContract.KindOfRwmEntry._ID + "="+ id3);
+                queryBuilder.appendWhere(RwmUtilityContract.KindOfRwmEntry._ID + "="+ id3);
                 break;
             case TYPEOFRAWMATERIALS:
-                queryBuilder.setTables(RwmContract.TypeOfRwmEntry.TABLE_NAME);
+                queryBuilder.setTables(RwmUtilityContract.TypeOfRwmEntry.TABLE_NAME);
                 break;
             case ORDERS:
-                queryBuilder.setTables(RwmContract.OrdersEntry.TABLE_NAME);
+                queryBuilder.setTables(RwmUtilityContract.OrdersEntry.TABLE_NAME);
                 break;
             case ORDERS_ID:
-                queryBuilder.setTables(RwmContract.OrdersEntry.TABLE_NAME);
+                queryBuilder.setTables(RwmUtilityContract.OrdersEntry.TABLE_NAME);
                 long id1 = ContentUris.parseId(uri);
-                queryBuilder.appendWhere(RwmContract.OrdersEntry._ID + " = " + id1);
+                queryBuilder.appendWhere(RwmUtilityContract.OrdersEntry._ID + " = " + id1);
                 break;
             case REFINARY:
-                queryBuilder.setTables(RwmContract.RefinaryEntry.TABLE_NAME);
+                queryBuilder.setTables(RwmUtilityContract.RefinaryEntry.TABLE_NAME);
                 break;
             case REFINARY_ID:
-                queryBuilder.setTables(RwmContract.RefinaryEntry.TABLE_NAME);
+                queryBuilder.setTables(RwmUtilityContract.RefinaryEntry.TABLE_NAME);
                 long id2 = ContentUris.parseId(uri);
-                queryBuilder.appendWhere(RwmContract.RefinaryEntry._ID + " = " + id2);
+                queryBuilder.appendWhere(RwmUtilityContract.RefinaryEntry._ID + " = " + id2);
                 break;
 
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
         SQLiteDatabase db = mDBhelper.getReadableDatabase();
-        return queryBuilder.query(db, projection, selection,
+        Cursor cursor;
+        cursor= queryBuilder.query(db, projection, selection,
                 selectionArgs, null, null, sortOrder);
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
 
@@ -110,7 +150,7 @@ public class RwmProvider extends ContentProvider {
             case ORDERS:
                 db = mDBhelper.getWritableDatabase();
 
-                String orders =RwmContract.OrdersEntry.TABLE_NAME;
+                String orders = RwmUtilityContract.OrdersEntry.TABLE_NAME;
                 Id = db.insert(orders, null, values);
                 if(Id > 0){
                     returnUri = ContentUris.withAppendedId(uri,Id);
@@ -120,7 +160,7 @@ public class RwmProvider extends ContentProvider {
                 break;
             case REFINARY:
                 db = mDBhelper.getWritableDatabase();
-                Id = db.insert(RwmContract.RefinaryEntry.TABLE_NAME, null, values);
+                Id = db.insert(RwmUtilityContract.RefinaryEntry.TABLE_NAME, null, values);
                 if(Id > 0){
                     returnUri = ContentUris.withAppendedId(uri,Id);
                 }
@@ -141,25 +181,25 @@ public class RwmProvider extends ContentProvider {
         String selectionCriteria = selection;
         switch(match){
             case PROVIDERS:
-                return db.delete(RwmContract.ProvidersOfRwmEntry.TABLE_NAME, selection, selectionArgs);
+                return db.delete(RwmUtilityContract.ProvidersOfRwmEntry.TABLE_NAME, selection, selectionArgs);
             case ORDERS:
-                return db.delete(RwmContract.OrdersEntry.TABLE_NAME, selection, selectionArgs);
+                return db.delete(RwmUtilityContract.OrdersEntry.TABLE_NAME, selection, selectionArgs);
             case ORDERS_ID:
                 long taskId1 = ContentUris.parseId(uri);
-                selectionCriteria = RwmContract.OrdersEntry._ID + " = " + taskId1;
+                selectionCriteria = RwmUtilityContract.OrdersEntry._ID + " = " + taskId1;
                 if ((selection != null) && (selection.length() > 0)) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
-                return db.delete(RwmContract.OrdersEntry.TABLE_NAME, selectionCriteria, selectionArgs);
+                return db.delete(RwmUtilityContract.OrdersEntry.TABLE_NAME, selectionCriteria, selectionArgs);
             case REFINARY:
-                return db.delete(RwmContract.RefinaryEntry.TABLE_NAME, selection, selectionArgs);
+                return db.delete(RwmUtilityContract.RefinaryEntry.TABLE_NAME, selection, selectionArgs);
             case REFINARY_ID:
                 long taskId2 = ContentUris.parseId(uri);
-                selectionCriteria = RwmContract.OrdersEntry._ID + " = " + taskId2;
+                selectionCriteria = RwmUtilityContract.OrdersEntry._ID + " = " + taskId2;
                 if ((selection != null) && (selection.length() > 0)) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
-                return db.delete(RwmContract.OrdersEntry.TABLE_NAME, selectionCriteria, selectionArgs);
+                return db.delete(RwmUtilityContract.OrdersEntry.TABLE_NAME, selectionCriteria, selectionArgs);
             default:
                 throw new IllegalArgumentException("Unknown URI: "+ uri);
         }}
@@ -171,25 +211,25 @@ public class RwmProvider extends ContentProvider {
         String selectionCriteria = selection;
         switch(match){
             case PROVIDERS:
-                return db.update(RwmContract.ProvidersOfRwmEntry.TABLE_NAME,values, selection, selectionArgs);
+                return db.update(RwmUtilityContract.ProvidersOfRwmEntry.TABLE_NAME,values, selection, selectionArgs);
             case ORDERS:
-                return db.update(RwmContract.OrdersEntry.TABLE_NAME,values,selection, selectionArgs);
+                return db.update(RwmUtilityContract.OrdersEntry.TABLE_NAME,values,selection, selectionArgs);
             case ORDERS_ID:
                 long taskId1 = ContentUris.parseId(uri);
-                selectionCriteria = RwmContract.OrdersEntry._ID + " = " + taskId1;
+                selectionCriteria = RwmUtilityContract.OrdersEntry._ID + " = " + taskId1;
                 if ((selection != null) && (selection.length() > 0)) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
-                return db.update(RwmContract.OrdersEntry.TABLE_NAME,values, selectionCriteria, selectionArgs);
+                return db.update(RwmUtilityContract.OrdersEntry.TABLE_NAME,values, selectionCriteria, selectionArgs);
             case REFINARY:
-                return db.update(RwmContract.RefinaryEntry.TABLE_NAME,values, selection, selectionArgs);
+                return db.update(RwmUtilityContract.RefinaryEntry.TABLE_NAME,values, selection, selectionArgs);
             case REFINARY_ID:
                 long taskId2 = ContentUris.parseId(uri);
-                selectionCriteria = RwmContract.OrdersEntry._ID + " = " + taskId2;
+                selectionCriteria = RwmUtilityContract.OrdersEntry._ID + " = " + taskId2;
                 if ((selection != null) && (selection.length() > 0)) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
-                return db.update(RwmContract.OrdersEntry.TABLE_NAME,values, selectionCriteria, selectionArgs);
+                return db.update(RwmUtilityContract.OrdersEntry.TABLE_NAME,values, selectionCriteria, selectionArgs);
             default:
                 throw new IllegalArgumentException("Unknown URI: "+ uri);
         }

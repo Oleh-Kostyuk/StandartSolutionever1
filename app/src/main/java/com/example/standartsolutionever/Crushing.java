@@ -4,6 +4,7 @@ package com.example.standartsolutionever;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import static android.text.TextUtils.isEmpty;
+import static com.example.standartsolutionever.Mainfragment.frag;
 
 public class Crushing extends Fragment {
     Boolean index;
+    TextView infTextView;
     ListView lvData;
     Button btncarsave;
     Button btncartrans;
@@ -39,8 +43,15 @@ public class Crushing extends Fragment {
         // Inflate the layout for this fragment
 
         index = false;
-        View rootview = inflater.inflate(R.layout.fragment_choping, container, false);
+        View rootview = inflater.inflate(R.layout.fragment_crushing, container, false);
         final String[] Carriers = {" Дробление Да", " Дробление Нет"};
+        infTextView =rootview.findViewById(R.id.infTextView);
+        infTextView.setTextSize(20);
+        infTextView.setText(Html.fromHtml("<b><font color=\"red\">фрагмент: " +
+                " </font> дробение </b>"
+                + "<i> 1 2 3 4</i>"
+                + "<font color=\"red\"><b>5 </b></font>"
+                ));
         lvData = rootview.findViewById(R.id.Carrier);
         ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(),
                 android.R.layout.simple_list_item_single_choice, Carriers);
@@ -67,8 +78,9 @@ public class Crushing extends Fragment {
         btncartrans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ((MainActivity) getActivity()).openNewContentFragment ( Type_ofRwm.newInstance());
+                frag =Tab2.newInstance();
+                ((MainActivity) getActivity()).openNewContentFragment ( frag);
+             //   ((MainActivity) getActivity()).openNewContentFragment ( Type_ofRwm.newInstance());
             }
         });
 

@@ -1,0 +1,47 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context=".Type_ofRwm">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/infTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/TypeOfRwm"
+        android:layout_width="match_parent"
+        android:layout_height="264dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="10"
+        android:choiceMode="multipleChoice" />
+</LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="188dp"
+    android:layout_weight="1">
+    <Button
+        android:id="@+id/btntype2"
+        android:layout_width="204dp"
+        android:layout_height="155dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="СОХРАНИТЬ" />
+    <Button
+        android:id="@+id/btntype"
+        android:layout_width="204dp"
+        android:layout_height="145dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="ПЕРЕЙТИ" />
+
+</LinearLayout>
+</LinearLayout>

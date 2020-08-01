@@ -4,17 +4,17 @@ package com.example.standartsolutionever;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import static android.text.TextUtils.isEmpty;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -22,15 +22,18 @@ import static android.text.TextUtils.isEmpty;
  */
 public class Counterbefore extends Fragment {
     Boolean index;
+    Boolean requestmatcher;
+    TextView infTextView;
     EditText quantity;
     Button btnqttrans;
     Button btnqtsave;
     String Quantity;
+    private Pattern pattern;
+    private Matcher matcher;
     private OnDataTransfer24 mListener;
+    private static final String REG_EXPRESSION =
+            "^0{3}1\\d{3}(?:\\.\\d{2})?$";
 
-    /* public Quantityfrag() {
-         // Required empty public constructor
-     } */
     public static  Counterbefore newInstance() {
 
         Bundle args = new Bundle();
@@ -40,12 +43,21 @@ public class Counterbefore extends Fragment {
         return fragment;
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         index=false;
         View rootview = inflater.inflate(R.layout.fragment_counterbefoe, container, false);
+        infTextView =rootview.findViewById(R.id.infTextView);
+        infTextView.setTextSize(20);
+        infTextView.setText(Html.fromHtml("<b><font color=\"red\">фрагмент: " +
+                " </font> показания электросчетчика</b>"
+                + "<i> 1 2 3</i>"
+                + "<font color=\"red\"><b>4 </b></font>"
+                + "<i>5</i>"
+        ));
         quantity  = rootview.findViewById(R.id.quantity);
         btnqtsave = rootview.findViewById(R.id.btnqtsave);
         btnqtsave.setOnClickListener(new View.OnClickListener() {
@@ -53,8 +65,13 @@ public class Counterbefore extends Fragment {
             public void onClick(View v) {
                 Quantity = quantity.getText().toString();
                 mListener.onDataTransfer24(Quantity);
-                if (!isEmpty(Quantity))btnqttrans.setEnabled(!index);
-                else Toast.makeText(getActivity(),"Укажите показания электросчетчика",Toast.LENGTH_LONG).show();
+                pattern = Pattern.compile(REG_EXPRESSION);
+                matcher = pattern.matcher(Quantity);
+
+                if (matcher.matches())
+                    btnqttrans.setEnabled(!index);
+                else Toast.makeText(getActivity(),"Укажите  правильные показания электросчетчика",
+                        Toast.LENGTH_LONG).show();
             }});
         btnqttrans =rootview.findViewById(R.id.btnqttrans);
         btnqttrans.setEnabled(index);

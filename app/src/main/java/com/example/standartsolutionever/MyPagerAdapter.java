@@ -13,6 +13,7 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
     private  final List <String> tabTitles = new ArrayList<String>(){{
         add  ("Приход сырья");
         add ("Переработка сырья");
+        add ("Добавлено за день");
 
 
     }};
@@ -24,16 +25,11 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter {
     private void initialiseTabs (){
         tabs.add(RootFragment1.newInstance(Tab1.newInstance()));
         tabs.add(RootFragment1.newInstance(Tab2.newInstance()));
+        tabs.add(RootFragment1.newInstance(Tab3.newInstance()));
     }
-    @Override    public Fragment getItem(int position) {
-      /*  switch (position){
-            case 0: return      RootFragment1.newInstance(Tab1.newInstance() );
-            case 1: return      RootFrgment2.newInstance(Tab1.newInstance());
-        }
-
-
-        return null;*/
-      return tabs.get(position);
+    @Override
+    public Fragment getItem(int position) {
+        return tabs.get(position);
     }
 
     @Override

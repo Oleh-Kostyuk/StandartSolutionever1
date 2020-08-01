@@ -6,18 +6,19 @@ package com.example.standartsolutionever;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.text.TextUtils.isEmpty;
     public class QuantityforRefinary extends Fragment {
         Boolean index;
+        TextView infTextView;
         EditText quantity;
         Button btnqttrans;
         Button btnqtsave;
@@ -40,6 +41,13 @@ import static android.text.TextUtils.isEmpty;
             // Inflate the layout for this fragment
             index=false;
             View rootview = inflater.inflate(R.layout.fragment_quantityfor_refinary, container, false);
+            infTextView =rootview.findViewById(R.id.infTextView);
+            infTextView.setTextSize(20);
+            infTextView.setText(Html.fromHtml("<b><font color=\"red\">фрагмент: " +
+                    " </font>количество сырья </b>"
+                    + "<i> 1   </i>"
+                    + "<font color=\"red\"><b>2 </b></font>"
+                    + "<i>3 4 5 </i>"));
             quantity  = rootview.findViewById(R.id.quantity);
             btnqtsave = rootview.findViewById(R.id.btnqtsave);
             btnqtsave.setOnClickListener(new View.OnClickListener() {

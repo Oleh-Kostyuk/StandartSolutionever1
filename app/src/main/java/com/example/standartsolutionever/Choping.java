@@ -41,7 +41,11 @@ public class Choping extends Fragment {
 
         index = false;
         View rootview = inflater.inflate(R.layout.fragment_choping, container, false);
-        final String[] Carriers = {" Колка Да", " Колка Нет"};
+        String [] isCutting =null;
+        if(MainActivity.slcMaterialsForRefinary.equals("Щепа"))
+            isCutting = new String[]{"Нет колки"};
+        else isCutting = new String[]{"Была колка", "Нет колки"};
+        final String[] Carriers = isCutting;
         lvData = rootview.findViewById(R.id.Carrier);
         ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(),
                 android.R.layout.simple_list_item_single_choice, Carriers);

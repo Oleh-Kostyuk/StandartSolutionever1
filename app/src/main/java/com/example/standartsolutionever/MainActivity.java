@@ -1,37 +1,51 @@
 package com.example.standartsolutionever;
 
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 
 public class MainActivity extends AppCompatActivity
-        implements  Tab1.OnDataTransfer1,Type_ofRwm.OnDataTransfer2,
-        Tab2.OnDataTransfer21,KindofRwm.OnDataTransfer3,Quantityfrag.OnDataTransfer4,
-        Carrier.OnDataTransfer5, Cutting.OnDataTransfer23,QuantityforRefinary.OnDataTransfer22,
-        Counterbefore.OnDataTransfer24,Choping.OnDataTransfer25, Crushing.OnDataTransfer26
+        implements
+        Tab1.ChoseProvider,
+        Type_ofRwm.ChoseTypeRwm,
+        Tab2.OnDataTransfer21,
+        KindOfRwm.OnDataTransfer3,
+        Quantityfrag.OnDataTransfer4,
+        Carrier.OnDataTransfer5,
+        Cutting.OnDataTransfer23,
+        QuantityforRefinary.OnDataTransfer22,
+        Counterbefore.OnDataTransfer24,
+        Choping.OnDataTransfer25,
+        Crushing.OnDataTransfer26
 {
+
+   static String  slcMaterialsForRefinary;
    static String  slcproviders;
    static String  slctyperwm;
    static String  slckindrwm;
    static String  Quantity;
-   static String   Carrier;
+   static String  Carrier;
    ViewPager viewPager;
    MyPagerAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+         DBHelper mdHelper =DBHelper.getInstance(getApplicationContext());
+
         setContentView(R.layout.activity_main);
+
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         TabLayout tabLayout =  findViewById(R.id.tablayout);
         tabLayout.addTab(tabLayout.newTab().setText("Приход сырья"));
         tabLayout.addTab(tabLayout.newTab().setText("Переработка сырья"));
+        tabLayout.addTab(tabLayout.newTab().setText("Добавлено за день"));
         tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = findViewById(R.id.pager);
         adapter= new MyPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -55,10 +69,11 @@ public class MainActivity extends AppCompatActivity
         }
 
     @Override public void onBackPressed (){
-        if (! BackStackFragmn.handleBackPressed(getSupportFragmentManager())){
+        if (! BackStackFragment.handleBackPressed(getSupportFragmentManager())){
             super.onBackPressed();
         }
     }
+
     public void openNewContentFragment (Fragment fragment){
         RootFragment1 rootFragment1 = (RootFragment1) adapter.getItem(viewPager.getCurrentItem());
         if (fragment==Mainfragment.frag){
@@ -68,11 +83,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDataTransfer1(String string) {
+    public void ChoseProvider (String string) {
         slcproviders = string;
         }
     @Override
-    public void onDataTransfer2 (String string){
+    public void choseTypeRwm (String string){
         slctyperwm = string;
     }
     @Override
@@ -88,7 +103,7 @@ public class MainActivity extends AppCompatActivity
        Carrier = string;
         }
     @Override
-    public void onDataTransfer21(String string){}
+    public void onDataTransfer21(String string){slcMaterialsForRefinary=string;}
     @Override
     public void onDataTransfer23(String string) {
     }

@@ -4,7 +4,7 @@ package com.example.standartsolutionever;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import static android.text.TextUtils.isEmpty;
@@ -22,6 +23,7 @@ import static android.text.TextUtils.isEmpty;
  */
 public class Carrier extends Fragment {
     Boolean index;
+    TextView infTextView;
     ListView lvData;
     Button btncarsave;
     Button btncartrans;
@@ -49,7 +51,13 @@ public class Carrier extends Fragment {
 
             index = false;
             View rootview = inflater.inflate(R.layout.fragment_carrier, container, false);
-            final String[] Carriers = {"Самовывоз", "Поставщик"};
+        infTextView =rootview.findViewById(R.id.infTextView);
+        infTextView.setTextSize(20);
+        infTextView.setText(Html.fromHtml("<b><font color=\"red\"> фрагмент:  </font>выбор перевозчика </b>"
+                + "<i>1</i>"
+                + "<font color=\"red\"><b>2 </b></font>"
+                + "<i>3 4 5 6 </i>"));
+            final String[] Carriers = {"Самовывоз", "Поставщик", "Услуга"};
             lvData = rootview.findViewById(R.id.Carrier);
             ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(),
                     android.R.layout.simple_list_item_single_choice, Carriers);

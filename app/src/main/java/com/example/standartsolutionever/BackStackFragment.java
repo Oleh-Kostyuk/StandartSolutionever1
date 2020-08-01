@@ -4,15 +4,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
-public abstract class BackStackFragmn extends Fragment {
+
+
+public abstract class BackStackFragment extends Fragment {
     String TAG = "tag";
     int count;
     int index;
+
 public static boolean handleBackPressed (FragmentManager fm){
     if (fm.getFragments() != null) {
         for (Fragment frag : fm.getFragments()){
-            if (frag != null && frag.isVisible() && frag instanceof BackStackFragmn){
-                if (((BackStackFragmn)frag).onBackPressed ()){
+            if (frag != null && frag.isVisible() && frag instanceof BackStackFragment){
+                if (((BackStackFragment)frag).onBackPressed ()){
                     return true;
                 }
             }

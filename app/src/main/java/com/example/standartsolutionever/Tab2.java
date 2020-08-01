@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,23 +19,26 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.InvalidParameterException;
 
 import static android.text.TextUtils.isEmpty;
-import static com.example.standartsolutionever.RwmContract.CONTENT_AUTHORITY_URI;
+import static com.example.standartsolutionever.RwmUtilityContract.CONTENT_AUTHORITY_URI;
 
 
 public class Tab2 extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    TextView infTextView;
     ListView lvData;
     Button btnproviders ;
-    boolean index;
     Button btnproviders2;
-    String slcProviders;
+    boolean index;
+
     SimpleCursorAdapter scAdapter;
+    String slcMaterialsForRefinary;
 
     private static final int LOADER_ID = 225;
     private static final String ARG_PARAM1 = "param1";
@@ -70,9 +74,15 @@ public class Tab2 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
                              Bundle savedInstanceState) {
         index = false;
         View rootview = inflater.inflate(R.layout.fragment_tab2, container, false);
+        infTextView =rootview.findViewById(R.id.infTextView);
+        infTextView.setTextSize(20);
+        infTextView.setText(Html.fromHtml("<b><font color=\"red\">фрагмент: " +
+                " </font>выбор вида сырья </b>"
+                + "<font color=\"red\"><b>1 </b></font>"
+                + "<i> 2 3 4 5  </i>"));
         lvData = rootview.findViewById(R.id.providers);
         btnproviders =rootview.findViewById(R.id.btnproviders);
-        String[] from = new String[] {RwmContract.KindOfRwmEntry.COLUMN_NAME };
+        String[] from = new String[] {RwmUtilityContract.KindOfRwmEntry.COLUMN_NAME };
         int[] to = new int[] { android.R.id.text1 };
 
         scAdapter = new SimpleCursorAdapter(getActivity(),
@@ -119,18 +129,18 @@ public class Tab2 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle bundle) {
         String[] projection = {
-                RwmContract.KindOfRwmEntry._ID,
-                RwmContract.KindOfRwmEntry.COLUMN_NAME,
-                RwmContract.KindOfRwmEntry.MAY_PROCESSING
+                RwmUtilityContract.KindOfRwmEntry._ID,
+                RwmUtilityContract.KindOfRwmEntry.COLUMN_NAME,
+                RwmUtilityContract.KindOfRwmEntry.MAY_PROCESSING
         };
-        String selection1 = RwmContract.KindOfRwmEntry.MAY_PROCESSING  + " =? ";
+        String selection1 = RwmUtilityContract.KindOfRwmEntry.MAY_PROCESSING  + " =? ";
         if(id == LOADER_ID)
             return new CursorLoader(getActivity(), Uri.withAppendedPath(CONTENT_AUTHORITY_URI,
-                    RwmContract.KindOfRwmEntry.TABLE_NAME),
+                    RwmUtilityContract.KindOfRwmEntry.TABLE_NAME),
                     projection,
                     selection1,
                     new String[]{Integer.toString(1)},
-                    RwmContract.KindOfRwmEntry.COLUMN_NAME);
+                    RwmUtilityContract.KindOfRwmEntry.COLUMN_NAME);
         else
             throw new InvalidParameterException("Invalid loader id");
     }
@@ -143,14 +153,14 @@ public class Tab2 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cursor.moveToPosition(position);
-                slcProviders = cursor.getString(1);
+             slcMaterialsForRefinary = cursor.getString(1);
             }
         });
         btnproviders2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onDataTransfer21(slcProviders);
-                if (!isEmpty(slcProviders)) btnproviders.setEnabled(!index);
+                mListener.onDataTransfer21(slcMaterialsForRefinary);
+                if (!isEmpty(slcMaterialsForRefinary)) btnproviders.setEnabled(!index);
                 else Toast.makeText(getActivity(), "Выберите сырье",Toast.LENGTH_LONG).show();
 
 
