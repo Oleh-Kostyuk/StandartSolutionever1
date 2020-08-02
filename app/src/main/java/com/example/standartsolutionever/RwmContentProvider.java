@@ -23,7 +23,7 @@ import static com.example.standartsolutionever.RwmUtilityContract.DATABASE_NAME;
 public class RwmContentProvider extends ContentProvider {
 
     com.example.standartsolutionever.DBHelper mDBhelper;
-    private final String REGISTRATION_URL = "http://192.168.1.103:31415/sync/server-000";
+    private final String REGISTRATION_URL = "http://192.168.0.106:31415/sync/server-000";
     private final String NODE_ID = "android-001";
     private final String NODE_GROUP = "store";
 
@@ -171,6 +171,7 @@ public class RwmContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI: "+ uri);
         }
+        getContext().getContentResolver().notifyChange(returnUri, null);
         return returnUri;
     }
 

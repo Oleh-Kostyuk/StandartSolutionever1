@@ -157,7 +157,7 @@ public class Tab1 extends Fragment implements LoaderManager.LoaderCallbacks<Curs
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
+        scAdapter.swapCursor(null);
     }
     interface ChoseProvider {
          void  ChoseProvider ( String string);
